@@ -1,0 +1,9 @@
+gradlew
+gradlew.bat
+.gradle/
+**/.settings/**
+ext-lib/
+**/build/**
+gradle/
+**/.project
+**/.vscode/**

@@ -1,0 +1,34 @@
+def googleTestRepository = {
+        libs(PrebuiltLibraries) { 
+            googleTest { 
+                headers.srcDir new File(projectDir, "../ext-lib/googletest-master/googletest/include") 
+                binaries.withType(StaticLibraryBinary) {
+                    staticLibraryFile = file(projectDir.getPath() + "/../ext-lib/googletest-master/googletest/build/" + findGoogleTestStaticLib(targetPlatform))
+                }
+            }
+        }
+    } 
+
+def googlTestBinary = {
+    withType(GoogleTestTestSuiteBinarySpec) {
+            lib library: "googleTest", linkage: "static" 
+
+            if (targetPlatform.operatingSystem.linux) {
+                cppCompiler.args '-pthread'
+                linker.args '-pthread'
+            }
+    }
+}
+
+def findGoogleTestStaticLib(Platform p) {
+    if (p.operatingSystem.windows) {
+        return "Release/gtest.lib"
+    } else {
+        return "libgtest.a"
+    }
+}
+
+ext {
+    getGoogleTestRepository = googleTestRepository
+    getGoogleTestBinary = googlTestBinary
+}
