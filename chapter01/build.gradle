@@ -1,0 +1,19 @@
+
+apply plugin: 'cpp'
+apply plugin: 'google-test'
+
+model {
+       
+        repositories {
+            with getGoogleTestRepository
+        }
+
+        components {
+            chapter01(NativeLibrarySpec)
+        }
+
+        binaries {
+            with getGoogleTestBinary
+        }
+        
+}
