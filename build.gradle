@@ -21,13 +21,15 @@ project(":main") {
         apply plugin: 'cpp'
   
         components {
-            hello(NativeExecutableSpec) {
+            main(NativeExecutableSpec) {
                 sources {
                     cpp {
                         lib project: ':hello', library: 'hello'
-                    }
+                        lib project: ':chapter01', library: 'chapter01'
+                  }
                 }
             }
+
         }
     }
 }
