@@ -7,3 +7,4 @@ ext-lib/
 gradle/
 **/.project
 **/.vscode/**
+/build/
