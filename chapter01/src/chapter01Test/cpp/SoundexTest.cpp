@@ -22,3 +22,8 @@ TEST_F(SoundexEncoding, ReplacesConsonanatsWithAppropriateDigits)
 {
     ASSERT_THAT(soundex.encode("Ab"),Eq("A100"));
 }
+
+TEST_F(SoundexEncoding, IgnoresNonAlphabetics)
+{
+    ASSERT_THAT(soundex.encode("A#"),Eq("A000"));
+}
