@@ -16,6 +16,11 @@ auto head(std::string const & word)
   return word.substr(0,1);
 }
 
+auto tail(std::string const & word)
+{
+  return word.substr(1);
+}
+
 auto encodedDigit(char letter)
 {
     static const std::unordered_map<char, std::string> encodings {
@@ -43,14 +48,28 @@ auto encodedDigit(char letter)
     return found != encodings.end() ? found->second : "";
 }
 
+bool isEncodingComplete(std::string const & encodedString)
+{
+  return encodedString.length() == MaxCodeLength -1
+;}
+
 auto encodedDigits(std::string const & word)
 {
-  return (word.length() > 1) ? encodedDigit(word[1]) : "";
+  std::string encoding;
+  for(auto eachChar : word)
+  { 
+    if(isEncodingComplete(encoding))
+    {
+      break;
+    }
+    encoding += encodedDigit(eachChar);
+  }
+  return encoding;
 }
 
 }
 
 std::string Soundex::encode(const std::string &word) const
 {
-  return zeroPad(head(word)+ encodedDigits(word));
+  return zeroPad(head(word)+ encodedDigits(tail(word)));
 }
