@@ -21,6 +21,11 @@ auto tail(std::string const & word)
   return word.substr(1);
 }
 
+auto lastEncodedDigit(std::string const & encoding)
+{
+  return encoding.empty() ? "" : std::string(1,encoding.back());
+}
+
 auto encodedDigit(char letter)
 {
     static const std::unordered_map<char, std::string> encodings {
@@ -62,7 +67,14 @@ auto encodedDigits(std::string const & word)
     {
       break;
     }
-    encoding += encodedDigit(eachChar);
+
+    auto currentEncodedDigit = encodedDigit(eachChar);
+
+    if(currentEncodedDigit != lastEncodedDigit(encoding))
+    {
+         encoding += currentEncodedDigit;
+    }
+    
   }
   return encoding;
 }
