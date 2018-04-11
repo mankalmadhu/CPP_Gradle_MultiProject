@@ -41,9 +41,25 @@ TEST_F(SoundexEncoding, LimitsLengthToFourCharcters)
 TEST_F(SoundexEncoding, IgnoreVowelLikeLetters)
 {
     ASSERT_THAT(soundex.encode("Baeiouhycdl"),Eq("B234"));
+    ASSERT_THAT(soundex.encode("BAaEeIOioUuhycdl"),Eq("B234"));
 }
 
 TEST_F(SoundexEncoding, CombinesDuplicatedEncodings)
 {
     ASSERT_THAT(soundex.encode("Abfcgdt"),Eq("A123"));
+}
+
+TEST_F(SoundexEncoding, UppercasesFirstLetter)
+{
+    ASSERT_THAT(soundex.encode("abcd"),StartsWith("A"));
+}
+
+TEST_F(SoundexEncoding, IgnoresCaseWhenEncodingConsonants)
+{
+    ASSERT_THAT(soundex.encode("BCDL"),Eq(soundex.encode("Bcdl")));
+}
+
+TEST_F(SoundexEncoding, CombinesDuplicateCodesWhen2ndLetterDuplicates1st)
+{
+    ASSERT_THAT(soundex.encode("Bbcd"),Eq("B230"));
 }

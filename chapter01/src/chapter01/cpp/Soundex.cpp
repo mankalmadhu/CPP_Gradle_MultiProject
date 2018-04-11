@@ -4,6 +4,7 @@
 namespace{
 
 const size_t MaxCodeLength {4};
+const std::string NotADigit{"*"};
 
 auto zeroPad( std::string const & word )
 {
@@ -23,7 +24,7 @@ auto tail(std::string const & word)
 
 auto lastEncodedDigit(std::string const & encoding)
 {
-  return encoding.empty() ? "" : std::string(1,encoding.back());
+  return encoding.empty() ? NotADigit : std::string(1,encoding.back());
 }
 
 auto encodedDigit(char letter)
@@ -49,19 +50,28 @@ auto encodedDigit(char letter)
        {'r',"6"}
     };
 
-    auto found = encodings.find(letter);
-    return found != encodings.end() ? found->second : "";
+    auto found = encodings.find(std::tolower(static_cast<unsigned char>(letter)));
+    return found != encodings.end() ? found->second : NotADigit;
 }
 
 bool isEncodingComplete(std::string const & encodedString)
 {
-  return encodedString.length() == MaxCodeLength -1
-;}
+  return encodedString.length() == MaxCodeLength;
+}
+
+auto upperFront(std::string const & encodedString)
+{
+  return std::string(1,
+  std::toupper(static_cast<unsigned char>(encodedString.front())));
+}
 
 auto encodedDigits(std::string const & word)
 {
   std::string encoding;
-  for(auto eachChar : word)
+
+  encoding += encodedDigit(word.front());
+
+  for(auto eachChar : tail(word))
   { 
     if(isEncodingComplete(encoding))
     {
@@ -70,7 +80,7 @@ auto encodedDigits(std::string const & word)
 
     auto currentEncodedDigit = encodedDigit(eachChar);
 
-    if(currentEncodedDigit != lastEncodedDigit(encoding))
+    if(currentEncodedDigit != NotADigit && currentEncodedDigit != lastEncodedDigit(encoding))
     {
          encoding += currentEncodedDigit;
     }
@@ -83,5 +93,5 @@ auto encodedDigits(std::string const & word)
 
 std::string Soundex::encode(const std::string &word) const
 {
-  return zeroPad(head(word)+ encodedDigits(tail(word)));
+  return zeroPad(upperFront(head(word))+ tail(encodedDigits(word)));
 }
