@@ -27,6 +27,11 @@ auto lastEncodedDigit(std::string const & encoding)
   return encoding.empty() ? NotADigit : std::string(1,encoding.back());
 }
 
+auto lower(char letter)
+{
+  return std::tolower(static_cast<unsigned char>(letter));
+}
+
 auto encodedDigit(char letter)
 {
     static const std::unordered_map<char, std::string> encodings {
@@ -50,7 +55,7 @@ auto encodedDigit(char letter)
        {'r',"6"}
     };
 
-    auto found = encodings.find(std::tolower(static_cast<unsigned char>(letter)));
+    auto found = encodings.find(lower(letter));
     return found != encodings.end() ? found->second : NotADigit;
 }
 
@@ -65,27 +70,44 @@ auto upperFront(std::string const & encodedString)
   std::toupper(static_cast<unsigned char>(encodedString.front())));
 }
 
+void encodeHead(std::string& encoding, std::string const & word)
+{
+  encoding += encodedDigit(word.front());
+}
+
+bool isVowel(char letter)
+{
+  return std::string("aeiouy").find(lower(letter)) != std::string::npos;
+}
+
+void encodeLetter(std::string& encoding,char letter, char lastLetter)
+{
+  auto currentEncodedDigit = encodedDigit(letter);
+  if(currentEncodedDigit != NotADigit && 
+  (currentEncodedDigit != lastEncodedDigit(encoding) || isVowel(lastLetter)))
+  {
+    encoding += currentEncodedDigit;
+  }
+}
+
+void encodeTail(std::string& encoding, std::string const & word)
+{
+  for(auto i=1u; i < word.length();i++)
+  { 
+    if(!isEncodingComplete(encoding))
+    {
+      encodeLetter(encoding,word[i],word[i-1]);
+    }
+   
+  }
+
+}
+
 auto encodedDigits(std::string const & word)
 {
   std::string encoding;
-
-  encoding += encodedDigit(word.front());
-
-  for(auto eachChar : tail(word))
-  { 
-    if(isEncodingComplete(encoding))
-    {
-      break;
-    }
-
-    auto currentEncodedDigit = encodedDigit(eachChar);
-
-    if(currentEncodedDigit != NotADigit && currentEncodedDigit != lastEncodedDigit(encoding))
-    {
-         encoding += currentEncodedDigit;
-    }
-    
-  }
+  encodeHead(encoding, word);
+  encodeTail(encoding, word);
   return encoding;
 }
 
