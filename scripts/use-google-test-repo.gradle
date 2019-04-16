@@ -1,9 +1,10 @@
 def googleTestRepository = {
         libs(PrebuiltLibraries) { 
             googleTest { 
-                headers.srcDir new File(projectDir, "../ext-lib/googletest-master/googletest/include") 
+                headers.srcDir new File(projectDir, "../ext-lib/googletest-master/googletest/include")
+                headers.srcDir new File(projectDir, "../ext-lib/googletest-master/googlemock/include")
                 binaries.withType(StaticLibraryBinary) {
-                    staticLibraryFile = file(projectDir.getPath() + "/../ext-lib/googletest-master/googletest/build/" + findGoogleTestStaticLib(targetPlatform))
+                    staticLibraryFile = file(projectDir.getPath() + "/../ext-lib/googletest-master/googletest/build/lib/" + findGoogleTestStaticLib(targetPlatform))
                 }
             }
         }
